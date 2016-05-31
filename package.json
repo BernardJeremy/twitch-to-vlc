@@ -1,0 +1,26 @@
+{
+  "name": "twitch-to-vlc",
+  "version": "1.0.0",
+  "description": "Node.js program used to play twitch stream in VLC",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BernardJeremy/twitch-to-vlc.git"
+  },
+  "author": "BernardJeremy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BernardJeremy/twitch-to-vlc/issues"
+  },
+  "homepage": "https://github.com/BernardJeremy/twitch-to-vlc#readme",
+  "dependencies": {
+    "twitch-url": "^1.0.0"
+  },
+  "eslintConfig": {
+    "ecmaVersion": 6
+  }
+}
