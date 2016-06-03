@@ -4,6 +4,7 @@ Node.js program used to play twitch stream in VLC
 ## Features
 - Start VLC with a twitch stream
 - Choice on every quality available
+- Set the quality directly from the command line
 
 ## Installation
 - Simply clone this depot
@@ -12,8 +13,8 @@ Node.js program used to play twitch stream in VLC
 - Perform `npm install` command.
 
 ## Run
-- Run `npm start <channelName>` or `npm index.js <channelName>`
-- Choose the quality by entering its number.
+- Run `npm start <channelName> [qualityNumber]` or `npm index.js <channelName> [qualityNumber]`
+- Choose the quality by entering its number (if you've not did it in the command line).
 - Enjoy !
 
 ## Configuration

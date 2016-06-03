@@ -12,6 +12,11 @@ if (process.argv.length < 3) {
   process.exit();
 }
 
+let defaultChoice = null;
+if (process.argv.length >= 4 && isNaN(process.argv[3]) == false) {
+  defaultChoice = process.argv[3];
+}
+
 /*
   Retrieve live name paramters
  */
@@ -29,16 +34,22 @@ getLinks(channelName, (err, links) => {
       console.log(i++ + ') ' + link.description);
     });
 
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout
-    });
-    rl.question('WHat quality do you want to see? ', (answer) => {
-      rl.close();
-      if (isNaN(answer) || answer >= links.length) {
-        console.log('You have to pick a good number!');
-      } else {
-        spawn(pathVlc, [links[answer].uri]);
-      }
-  });
+    let answer = null;
+    if (defaultChoice !== null && defaultChoice < links.length) {
+      console.log(defaultChoice);
+      spawn(pathVlc, [links[defaultChoice].uri]);
+    } else {
+      const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+      });
+      rl.question('WHat quality do you want to see? ', (answer) => {
+        rl.close();
+        if (isNaN(answer) || answer >= links.length) {
+          return console.log('You have to pick a good number!');
+        } else {
+          spawn(pathVlc, [links[answer].uri]);
+        }
+      });
+    }
 }});
