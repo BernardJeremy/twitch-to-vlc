@@ -17,10 +17,11 @@
     "url": "https://github.com/BernardJeremy/twitch-to-vlc/issues"
   },
   "homepage": "https://github.com/BernardJeremy/twitch-to-vlc#readme",
-  "dependencies": {
-    "twitch-url": "^1.0.0"
-  },
   "eslintConfig": {
     "ecmaVersion": 6
+  },
+  "dependencies": {
+    "request": "^2.78.0",
+    "request-promise": "^4.1.1"
   }
 }

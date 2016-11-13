@@ -8,7 +8,7 @@ Node.js program used to play twitch stream in VLC
 
 ## Installation
 - Simply clone this depot
-- Copy [config.json.exemple](https://github.com/BernardJeremy/twitch-to-vlc/blob/master/config.json.exemple) file into a `config.json` file.
+- Copy [config.json.example](https://github.com/BernardJeremy/twitch-to-vlc/blob/master/config.json.example) file into a `config.json` file.
 - Update if necessary the path of VLC in the `config.json` file.
 - Perform `npm install` command.
 
