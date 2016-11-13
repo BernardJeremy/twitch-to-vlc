@@ -1,6 +1,6 @@
 {
   "name": "twitch-to-vlc",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Node.js program used to play twitch stream in VLC",
   "main": "index.js",
   "scripts": {
@@ -21,6 +21,8 @@
     "ecmaVersion": 6
   },
   "dependencies": {
+    "command-line-args": "^3.0.3",
+    "m3u8": "0.0.7",
     "request": "^2.78.0",
     "request-promise": "^4.1.1"
   }

@@ -1,55 +1,87 @@
 const spawn = require('child_process').spawn;
-const readline = require('readline');
-const getLinks = require('twitch-url/twitch')
+const Readable = require('stream').Readable
 
-let pathVlc = require('./config.json').pathVlc;
+const rp = require('request-promise');
+const commandLineArgs = require('command-line-args');
+const M3U8Parser = require('m3u8').createStream();
 
-/*
-  Check if the program is run with at least 3 arguments
- */
-if (process.argv.length < 3) {
-  console.log('Missing live name parameter');
-  process.exit();
+const LOG = require('./lib/logger').log;
+const DEBUG = require('./lib/logger').debug;
+const rand = require('./lib/random');
+
+const optionsChecker = require('./src/checkOptions');
+
+const pathVlc = require('./config.json').pathVlc;
+
+const optionDefinitions = [
+  { name: 'channel', alias: 'c', type: String },
+  { name: 'video', alias: 'v', type: String },
+  { name: 'quality', alias: 'q', type: String },
+  { name: 'token', alias: 't', type: String }
+];
+
+const options = commandLineArgs(optionDefinitions);
+
+if (!optionsChecker(options)){
+  LOG("Parameter error. Usage :");
+  LOG("--token/-t [token] --channel/-c [channel] --quality/-q [audio/mobile/low/medium/high/source]");
+  LOG("--token/-t [token] --video/-v [video] --quality/-q [audio/mobile/low/medium/high/source]");
+  process.exit(1);
 }
+DEBUG(options);
 
-let defaultChoice = null;
-if (process.argv.length >= 4 && isNaN(process.argv[3]) == false) {
-  defaultChoice = process.argv[3];
-}
+let queryParam = {
+    uri: 'https://api.twitch.tv/api/vods/' + '100217285' + '/access_token.json',
+    qs: {
+        oauth_token: ''
+    },
+    headers: {
+        'User-Agent': 'Galaxy/1.0 [en] (Mac OS X 10.5.6; U; en)'
+    },
+    json: true // Automatically parses the JSON string in the response
+};
 
-/*
-  Retrieve live name paramters
- */
-let channelName = process.argv[2];
+rp(queryParam)
+    .then(function (ret) {
+      console.log('access_token.token : ', ret.token);
+        console.log('access_token.sig : ', ret.sig);
+        let usherQueryParam = {
+          uri: 'http://usher.twitch.tv/vod/' + '100217285',
+          qs: {
+              nauth: ret.token,
+              allow_audio_only: true,
+              p: rand(0, 9999),
+              allow_source: true,
+              allow_spectre: false,
+              nauthsig: ret.sig,
+              player: 'twitchweb',
+              type: 'any'
 
+          },
+          headers: {
+              'User-Agent': 'Galaxy/1.0 [en] (Mac OS X 10.5.6; U; en)'
+          },
+//          json: true // Automatically parses the JSON string in the response
+        };
 
-getLinks(channelName, (err, links) => {
-  if(err || !links) {
-    console.log('There was an error parsing links for `'+channelName+'`:');
-    log(err);
-  } else {
-    console.log('Links found for channel `'+channelName+'`:');
-    let i = 0;
-    links.forEach(function(link) {
-      console.log(i++ + ') ' + link.description);
+        rp(usherQueryParam)
+            .then(function (ret) {
+              var s = new Readable;
+              s.push(ret);
+              s.push(null);
+
+              s.pipe(M3U8Parser);
+              M3U8Parser.on('m3u', function(m3u) {
+                // fully parsed m3u file
+                console.log('usher/ : ', m3u.items.StreamItem[0].properties.uri);
+                spawn(pathVlc, [m3u.items.StreamItem[0].properties.uri]);
+              });
+
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+    })
+    .catch(function (err) {
+        console.log(err);
     });
-
-    let answer = null;
-    if (defaultChoice !== null && defaultChoice < links.length) {
-      console.log(defaultChoice);
-      spawn(pathVlc, [links[defaultChoice].uri]);
-    } else {
-      const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-      });
-      rl.question('WHat quality do you want to see? ', (answer) => {
-        rl.close();
-        if (isNaN(answer) || answer >= links.length) {
-          return console.log('You have to pick a good number!');
-        } else {
-          spawn(pathVlc, [links[answer].uri]);
-        }
-      });
-    }
-}});
