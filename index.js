@@ -46,8 +46,24 @@ if (options.isVideo) {
 }
 
 getTwitchLink(type, target, token).then(function(ret){
-  LOG("Link", ret);
-  //  spawn(pathVlc, [m3u.items.StreamItem[0].properties.uri]);
+  //LOG("Link", ret);
+  if (options.hasQuality) {
+    if (typeof ret[options.quality] !== 'undefined') {
+      LOG("QUALITY", options.quality)
+      LOG("LINK", ret[options.quality].url)
+      spawn(pathVlc, [ret[options.quality].url]);
+      return;
+    } else {
+      LOG("ERROR", "Your quality is not available")
+    }
+  }
+
+  let qualityAvailableStr = 'Available quality : ';
+  for (r in ret) {
+    qualityAvailableStr += r + ', ';
+  }
+  console.log(qualityAvailableStr);
+
 }).catch(function(err){
   LOG("Error", err.message);
 });
