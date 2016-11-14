@@ -1,3 +1,4 @@
 {
-  "pathVlc" : "/usr/bin/vlc"
+  "pathVlc" : "/usr/bin/vlc",
+  "client_id" : ""
 }

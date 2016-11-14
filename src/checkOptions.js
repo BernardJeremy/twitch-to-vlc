@@ -1,3 +1,8 @@
+/**
+ * Check is options are valid.
+ * @param {Object} options
+ * @return {Boolean}
+ */
 function checkOptions (options) {
   let ok = false;
   options.isChannel = false;
