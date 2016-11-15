@@ -6,6 +6,10 @@ Node.js program used to play twitch stream and VOD in VLC
 - Display every quality available
 - Set the quality directly from the command line
 
+## Requirement
+- `Node.JS` v6.x.x+
+- `NPM`
+
 ## Installation
 - Simply clone this depot
 - Copy [config.json.example](https://github.com/BernardJeremy/twitch-to-vlc/blob/master/config.json.example) file into a `config.json` file.
@@ -14,8 +18,8 @@ Node.js program used to play twitch stream and VOD in VLC
 - Perform `npm install` command.
 
 ## Run
-- Stream :  `npm index.js -c <channelName> -q [qualityName] -t [oauthToken]`
-- VOD : `npm index.js -v <videoID> -q [qualityName] -t [oauthToken]`
+- Stream :  `node index.js -c <channelName> -q [qualityName] -t [oauthToken]`
+- VOD : `node index.js -v <videoID> -q [qualityName] -t [oauthToken]`
 - `-q` and `-t` options are not mandatory
 - Token for `-t` option is a user OAuth token (see [here](https://github.com/justintv/Twitch-API/blob/master/authentication.md#getting-access-tokens) for details)
 - Enjoy !
