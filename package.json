@@ -22,9 +22,6 @@
   },
   "dependencies": {
     "command-line-args": "^3.0.3",
-    "m3u8": "0.0.7",
-    "node-twitch-link": "github:bernardjeremy/node-twitch-link",
-    "request": "^2.78.0",
-    "request-promise": "^4.1.1"
+    "node-twitch-link": "github:bernardjeremy/node-twitch-link"
   }
 }
