@@ -69,9 +69,15 @@ getTwitchLink(type, target, token).then(function(ret){
   //LOG("Link", ret);
   if (options.hasQuality) {
     if (typeof ret[options.quality] !== 'undefined') {
-      LOG("QUALITY", options.quality)
-      LOG("LINK", ret[options.quality].url)
-      spawn(pathVlc, [ret[options.quality].url]);
+      let child = spawn(
+        pathVlc,
+        [ret[options.quality].url],
+        { detached: true, stdio: [ 'ignore', 'ignore', 'ignore' ] }
+      );
+      child.unref();
+      LOG("VLC", "Player started");
+      LOG("LINK", ret[options.quality].url);
+      LOG("QUALITY", options.quality);
       return;
     } else {
       LOG("ERROR", "Your quality is not available")
