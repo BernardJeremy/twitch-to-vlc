@@ -65,6 +65,7 @@ getTwitchLink(url, token).then(function(ret){
       LOG("VLC", "Player started");
       LOG("LINK", ret[quality].url);
       LOG("QUALITY", quality);
+      LOG("INFO", "VLC will start shortly");
       return;
     } else {
       LOG("ERROR", "Your quality is not available")
