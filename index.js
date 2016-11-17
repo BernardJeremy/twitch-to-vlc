@@ -18,20 +18,19 @@ const client_id = require('./config.json').client_id;
 
 //command line options register
 const optionDefinitions = [
-  { name: 'channel', alias: 'c', type: String },
-  { name: 'video', alias: 'v', type: String },
-  { name: 'quality', alias: 'q', type: String },
+  { name: 'options', multiple: true, defaultOption: true, type: String},
   { name: 'token', alias: 't', type: String }
 ];
 
 //command line options parser
 const options = commandLineArgs(optionDefinitions);
 
+console.log(options);
+
 //command line options validator
 if (!optionsChecker(options)){
   LOG("Parameter error. Usage :");
-  LOG("--token/-t [token] --channel/-c [channel] --quality/-q [audio/mobile/low/medium/high/source]");
-  LOG("--token/-t [token] --video/-v [video] --quality/-q [audio/mobile/low/medium/high/source]");
+  LOG("URL [audio/mobile/low/medium/high/source] [--token/-t TOKEN]");
   process.exit(1);
 }
 
@@ -47,37 +46,25 @@ if (token == '') {
   }
 }
 
-//quality management
-let quality = (options.hasQuality? options.quality : '');
-LOG("QUALITY", quality == '' ? null : quality );
+//url management
+let url = (options.options.length > 0 ? options.options[0] : '');
 
-//sorting between video (vod) and channel (stream)
-let type = '';
-let target = '';
-if (options.isVideo) {
-  target = options.video;
-  type = 'video'
-  LOG("VIDEO", target);
-} else if (options.isChannel) {
-  target = options.channel;
-  type = 'channel'
-  LOG("CHANNEL", target);
-}
+//quality management
+let quality = (options.options.length > 1 ? options.options[1] : '');
 
 //retrieve links. Start VLC with given quality or display available quality
-getTwitchLink(type, target, token).then(function(ret){
-  //LOG("Link", ret);
-  if (options.hasQuality) {
-    if (typeof ret[options.quality] !== 'undefined') {
+getTwitchLink(url, token).then(function(ret){
+  if (quality !== '') {
+    if (typeof ret[quality] !== 'undefined') {
       let child = spawn(
         pathVlc,
-        [ret[options.quality].url],
+        [ret[quality].url],
         { detached: true, stdio: [ 'ignore', 'ignore', 'ignore' ] }
       );
       child.unref();
       LOG("VLC", "Player started");
-      LOG("LINK", ret[options.quality].url);
-      LOG("QUALITY", options.quality);
+      LOG("LINK", ret[quality].url);
+      LOG("QUALITY", quality);
       return;
     } else {
       LOG("ERROR", "Your quality is not available")
