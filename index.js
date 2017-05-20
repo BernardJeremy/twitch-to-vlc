@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 //system require
 const spawn = require('child_process').spawn;
 
@@ -19,18 +21,24 @@ const client_id = require('./config.json').client_id;
 //command line options register
 const optionDefinitions = [
   { name: 'options', multiple: true, defaultOption: true, type: String},
-  { name: 'token', alias: 't', type: String }
+  { name: 'token', alias: 't', type: String },
+  { name: 'channel', alias: 'c', type: String },
+  { name: 'video', alias: 'v', type: String },
 ];
 
 //command line options parser
 const options = commandLineArgs(optionDefinitions);
 
-console.log(options);
+LOG(options);
 
 //command line options validator
 if (!optionsChecker(options)){
   LOG("Parameter error. Usage :");
-  LOG("URL [audio/mobile/low/medium/high/source] [--token/-t TOKEN]");
+  LOG("URL [chunked, 720p30, 480p30, 360p30, 160p30, audio_only] [--token/-t TOKEN]");
+  LOG("OR");
+  LOG("-c channelName [chunked, 720p30, 480p30, 360p30, 160p30, audio_only] [--token/-t TOKEN]");
+  LOG("OR");
+  LOG("-v videoId [chunked, 720p30, 480p30, 360p30, 160p30, audio_only] [--token/-t TOKEN]");
   process.exit(1);
 }
 
@@ -47,10 +55,20 @@ if (token == '') {
 }
 
 //url management
-let url = (options.options.length > 0 ? options.options[0] : '');
+let url = (options.options && options.options.length > 0 ? options.options[0] : '');
+if (options.channel && options.channel !== '') {
+  url = 'https://www.twitch.tv/' + options.channel;
+} else if (options.video && options.video !== '') {
+  url = 'https://www.twitch.tv/videos/' + options.video;
+}
 
 //quality management
-let quality = (options.options.length > 1 ? options.options[1] : '');
+let quality = '';
+if (options.options && (options.channel || options.video)) {
+  quality = options.options[0]
+} else if (options.options){
+  quality = (options.options.length > 1 ? options.options[1] : '');
+}
 
 //retrieve links. Start VLC with given quality or display available quality
 getTwitchLink(url, token).then(function(ret){

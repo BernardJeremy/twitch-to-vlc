@@ -7,7 +7,7 @@ function checkOptions (options) {
   let ok = false;
   options.hasToken = false;
 
-  if (typeof options.options !== "undefined"){
+  if (typeof options.options !== "undefined" || options.channel || options.video){
     ok = true;
   }
 

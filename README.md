@@ -1,5 +1,5 @@
 # twitch-to-vlc
-Node.js program used to play twitch stream and VOD in VLC
+Node.js program created to play twitch stream and VOD in VLC
 
 ## Features
 - Start VLC with a twitch stream/VOD
@@ -18,8 +18,9 @@ Node.js program used to play twitch stream and VOD in VLC
 - Perform `npm install` command.
 
 ## Run
-- Stream :  `node index.js  URL [quality] [-t oauthToken]`
-- `-t` option are not mandatory
+- Full URL (channel or video) :  `node index.js  URL [quality] [-t oauthToken]`
+- Channel :  `node index.js -c channelName [quality] [-t oauthToken]`
+- Video :  `node index.js -v videoID [quality] [-t oauthToken]`
 - Token for `-t` option is a user OAuth token (see [here](https://github.com/justintv/Twitch-API/blob/master/authentication.md#getting-access-tokens) for details)
 - Enjoy !
 
